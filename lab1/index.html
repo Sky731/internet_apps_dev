@@ -4,12 +4,23 @@
     <meta charset="UTF-8">
     <title>IAD lab1</title>
     <style>
+        html {
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
         #header {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            font-family: monospace;
             font-size: 16px;
+            color: black;
+            margin: 0 0 20px;
         }
 
         body {
@@ -17,31 +28,45 @@
         }
 
         .field {
-            margin: 20px;
+            margin: 10px;
             padding: 1.5em;
             background: #aadcff;
 
             -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
             -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
             box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
+        }
 
+        .field > * {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .field.grow {
+            flex-shrink: 0;
             flex-grow: 1;
-            min-width: 30%;
         }
 
         .container {
             margin: 0 30px;
             flex-grow: 1;
-        }
-
-        .container .container {
-            margin: 0;
-            flex-direction: row;
             display: flex;
         }
 
-        img {
+        .container.horizontal {
+            margin: 0;
+            flex-direction: row;
+        }
+
+        .container.vertical {
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .field > img {
             border-radius: 7px;
+            margin: 5px;
+            display: block;
         }
 
         button, input[type = "submit"] {
@@ -66,6 +91,17 @@
             margin: 5px;
         }
 
+        #results td, #results th {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        #results {
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+
         button:hover {
             background: #d6e0ee;
         }
@@ -74,8 +110,14 @@
             background: #b9c3d1;
         }
 
+        .hidden {
+            display: none;
+        }
+
         #inputs > * {
-            margin: 10px 0;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-right: 3em;
         }
 
         label.invalid {
@@ -83,8 +125,21 @@
             color: darkred;
         }
 
+        #task {
+            align-self: flex-start;
+        }
+
+        #results_field {
+            max-height: calc((20px + 1em) * 10 + 20px);
+            overflow-y: auto;
+        }
+
+        form {
+            width: max-content;
+        }
+
         @media screen and (max-width: 768px) {
-            .container .container {
+            .container.horizontal {
                 flex-direction: column;
             }
         }
@@ -93,67 +148,82 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container vertical">
     <div class="field" id="header">
         <div class="left">Группа: P3102</div>
         <div class="middle">Каюков Иван</div>
         <div class="right">Вариант: 18205</div>
     </div>
-    <div class="container">
-        <div id="inputs" class="field">
-            <form id="form">
-                <input type="hidden" id="y" name="y">
-                <table>
+    <div class="container horizontal">
+        <div class="container vertical">
+            <div id="inputs" class="field grow">
+                <form id="form">
+                    <input type="hidden" id="y" name="y">
+                    <table>
+                        <tr>
+                            <td rowspan="3"><label for="y">Y =</label></td>
+                            <td>
+                                <button>-3</button>
+                            </td>
+                            <td>
+                                <button>-2</button>
+                            </td>
+                            <td>
+                                <button>-1</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button>0</button>
+                            </td>
+                            <td>
+                                <button>1</button>
+                            </td>
+                            <td>
+                                <button>2</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button>3</button>
+                            </td>
+                            <td>
+                                <button>4</button>
+                            </td>
+                            <td>
+                                <button>5</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="x">X =</label></td>
+                            <td colspan="3"><input required id="x" name="x" type="text" placeholder="(-3 ... 3)"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="r">R =</label></td>
+                            <td colspan="3"><input required id="r" name="r" type="text" placeholder="(2 ... 5)"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="3"><input type="submit" value="Отправить"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div id="results_field" class="field grow hidden">
+                <table id="results">
                     <tr>
-                        <td rowspan="3"><label for="y">Y =</label></td>
-                        <td>
-                            <button>-3</button>
-                        </td>
-                        <td>
-                            <button>-2</button>
-                        </td>
-                        <td>
-                            <button>-1</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button>0</button>
-                        </td>
-                        <td>
-                            <button>1</button>
-                        </td>
-                        <td>
-                            <button>2</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button>3</button>
-                        </td>
-                        <td>
-                            <button>4</button>
-                        </td>
-                        <td>
-                            <button>5</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="x">X =</label></td>
-                        <td colspan="3"><input required id="x" name="x" type="text" placeholder="(-3 ... 3)"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="r">R =</label></td>
-                        <td colspan="3"><input required id="r" name="r" type="text" placeholder="(2 ... 5)"></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td colspan="3"><input type="submit" value="Отправить"></td>
+                        <th>N</th>
+                        <th>Y</th>
+                        <th>X</th>
+                        <th>R</th>
+                        <th>&isin;</th>
+                        <th>Current time</th>
+                        <th>Execution time</th>
                     </tr>
                 </table>
-            </form>
+            </div>
         </div>
-        <div class="field">
+        <div id="task" class="field">
             <img src="images/graph.jpg" alt="This is a graph">
             <img src="images/task.png" alt="This is a task">
         </div>
@@ -162,6 +232,7 @@
 
 <script src="js/jQuery.min.js"></script>
 <script>
+    var counter = 1;
     var y = null;
     $(".container .container table button").on("click", function (e) {
         e.preventDefault();
@@ -218,7 +289,18 @@
             type: "POST",
             contentType: false
         }).then(function (t, u, v) {
-
+            var response = JSON.parse(t);
+            var html = "<tr><td>" + counter +
+                "</td><td>" + response["y"] +
+                "</td><td>" + response["x"] +
+                "</td><td>" + response["r"] +
+                "</td><td>" + response["is_in"] +
+                "</td><td>" + response["cur_time"] +
+                "</td><td>" + parseFloat(response["exec_time"]).toFixed(9) +
+                "</td></tr>";
+            document.getElementById("results").innerHTML += html;
+            $("#results_field").removeClass("hidden");
+            counter++;
         })
     })
 </script>
