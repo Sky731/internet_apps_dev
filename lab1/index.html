@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>IAD lab1</title>
+    <style>
+        #header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        body {
+            display: flex;
+        }
+
+        .field {
+            margin: 20px;
+            padding: 1.5em;
+            background: #aadcff;
+
+            -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
+            -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.7);
+
+            flex-grow: 1;
+            min-width: 30%;
+        }
+
+        .container {
+            margin: 0 30px;
+            flex-grow: 1;
+        }
+
+        .container .container {
+            margin: 0;
+            flex-direction: row;
+            display: flex;
+        }
+
+        img {
+            border-radius: 7px;
+        }
+
+        button, input[type = "submit"] {
+            background: #e6f1ff;
+            border: 0;
+            width: 40px;
+            height: 40px;
+            font-weight: bold;
+            cursor: pointer;
+
+            -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.7);
+            -moz-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.7);
+        }
+
+        input[type = "submit"] {
+            width: calc(100% - 10px);
+
+        }
+
+        td > * {
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #d6e0ee;
+        }
+
+        button:active, button.active {
+            background: #b9c3d1;
+        }
+
+        #inputs > * {
+            margin: 10px 0;
+        }
+
+        label.invalid {
+            font-weight: bold;
+            color: darkred;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container .container {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="field" id="header">
+        <div class="left">Группа: P3102</div>
+        <div class="middle">Каюков Иван</div>
+        <div class="right">Вариант: 18205</div>
+    </div>
+    <div class="container">
+        <div id="inputs" class="field">
+            <form id="form">
+                <input type="hidden" id="y" name="y">
+                <table>
+                    <tr>
+                        <td rowspan="3"><label for="y">Y =</label></td>
+                        <td>
+                            <button>-3</button>
+                        </td>
+                        <td>
+                            <button>-2</button>
+                        </td>
+                        <td>
+                            <button>-1</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button>0</button>
+                        </td>
+                        <td>
+                            <button>1</button>
+                        </td>
+                        <td>
+                            <button>2</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button>3</button>
+                        </td>
+                        <td>
+                            <button>4</button>
+                        </td>
+                        <td>
+                            <button>5</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="x">X =</label></td>
+                        <td colspan="3"><input required id="x" name="x" type="text" placeholder="(-3 ... 3)"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="r">R =</label></td>
+                        <td colspan="3"><input required id="r" name="r" type="text" placeholder="(2 ... 5)"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="3"><input type="submit" value="Отправить"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="field">
+            <img src="images/graph.jpg" alt="This is a graph">
+            <img src="images/task.png" alt="This is a task">
+        </div>
+    </div>
+</div>
+
+<script src="js/jQuery.min.js"></script>
+<script>
+    var y = null;
+    $(".container .container table button").on("click", function (e) {
+        e.preventDefault();
+        if (y === parseInt(e.currentTarget.innerText)) {
+            y = null;
+            $("table button").removeClass("active");
+            return;
+        }
+        y = parseInt(e.currentTarget.innerText);
+        document.querySelector("#y").value = y;
+        $("table button").removeClass("active");
+        $(e.currentTarget).addClass("active");
+    });
+
+    $("form#form").on("submit", function (e) {
+        e.preventDefault();
+        var fd = new FormData(e.currentTarget);
+        var y = parseInt(fd.get("y"));
+        var x = fd.get("x");
+        var r = fd.get("r");
+        var endOfLight = false;
+        $("label").removeClass("invalid");
+        if (!(y <= 5 && y >= -3)) {
+            $("label[for='y']").addClass("invalid");
+            endOfLight = true;
+        }
+
+        try {
+            x = parseFloat(x);
+            if (x >= 3 || x <= -3) {
+                throw true;
+            }
+        } catch (e) {
+            $("label[for='x']").addClass("invalid");
+            endOfLight = true;
+        }
+
+        try {
+            r = parseFloat(r);
+            if (r >= 5 || r <= 2) {
+                throw true;
+            }
+        } catch (e) {
+            $("label[for='r']").addClass("invalid");
+            endOfLight = true;
+        }
+
+        if (endOfLight) return;
+
+        $.ajax({
+            url: "validator.php",
+            data: fd,
+            processData: false,
+            type: "POST",
+            contentType: false
+        }).then(function (t, u, v) {
+
+        })
+    })
+</script>
+
+</body>
+</html>
