@@ -2,6 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>IAD lab1</title>
     <style>
         html {
@@ -84,7 +87,10 @@
 
         input[type = "submit"] {
             width: calc(100% - 10px);
+        }
 
+        input[type = "text"] {
+            padding: 3px;
         }
 
         td > * {
@@ -93,7 +99,7 @@
 
         #results td, #results th {
             text-align: center;
-            padding: 10px;
+            padding: 0.5em;
             border: 1px solid black;
         }
 
@@ -120,9 +126,10 @@
             padding-right: 3em;
         }
 
-        label.invalid {
-            font-weight: bold;
-            color: darkred;
+        .invalid {
+            box-shadow: 0 0 7px 0 red;
+            background: rgba(255,0,0,0.38);
+            border-color: red;
         }
 
         #task {
@@ -138,11 +145,38 @@
             width: max-content;
         }
 
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 1280px) {
             .container.horizontal {
-                flex-direction: column;
+                flex-direction: column-reverse;
+            }
+
+            #task {
+                align-self: unset;
+            }
+
+            #task img {
+                display: inline-block;
+            }
+
+            #task_img {
+                display: block;
+                max-width: 100%;
+                height: auto;
+            }
+
+            .field, .container {
+                max-width: 100%;
+            }
+
+            #results td, #results th {
+                font-size: 11px;
+            }
+
+            #header {
+                font-size: 12px;
             }
         }
+
 
     </style>
 </head>
@@ -225,7 +259,7 @@
         </div>
         <div id="task" class="field">
             <img src="images/graph.jpg" alt="This is a graph">
-            <img src="images/task.png" alt="This is a task">
+            <img id="task_img" src="images/task.png" alt="This is a task">
         </div>
     </div>
 </div>
@@ -238,6 +272,7 @@
         e.preventDefault();
         if (y === parseInt(e.currentTarget.innerText)) {
             y = null;
+            document.querySelector("#y").value = y;
             $("table button").removeClass("active");
             return;
         }
@@ -256,27 +291,32 @@
         var endOfLight = false;
         $("label").removeClass("invalid");
         if (!(y <= 5 && y >= -3)) {
-            $("label[for='y']").addClass("invalid");
+            // $("label[for='y']").addClass("invalid");
+            $("#inputs table button").addClass("invalid");
             endOfLight = true;
         }
 
         try {
+            if (x != parseFloat(x)) throw true;
             x = parseFloat(x);
             if (x >= 3 || x <= -3) {
                 throw true;
             }
         } catch (e) {
-            $("label[for='x']").addClass("invalid");
+            // $("label[for='x']").addClass("invalid");
+            $("#x").addClass("invalid");
             endOfLight = true;
         }
 
         try {
+            if (r != parseFloat(r)) throw true;
             r = parseFloat(r);
             if (r >= 5 || r <= 2) {
                 throw true;
             }
         } catch (e) {
-            $("label[for='r']").addClass("invalid");
+            // $("label[for='r']").addClass("invalid");
+            $("#r").addClass("invalid");
             endOfLight = true;
         }
 
@@ -302,7 +342,15 @@
             $("#results_field").removeClass("hidden");
             counter++;
         })
-    })
+    });
+    
+    $("input[type = text]").on("click", function (event) {
+        $(event.currentTarget).removeClass("invalid");
+    });
+
+    $("#inputs table button").on("click", function (event) {
+        $("#inputs table button").removeClass("invalid");
+    });
 </script>
 
 </body>
