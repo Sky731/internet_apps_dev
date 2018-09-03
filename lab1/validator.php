@@ -1,13 +1,32 @@
 <?php
 
+session_start();
+
+if (!isset($_SESSION["history"])) {
+    $_SESSION["history"] = array();
+}
+
+
 $time_start = microtime(true);
 
-$y = $_POST["y"];
-$x = $_POST["x"];
-$r = $_POST["r"];
+$y = str_replace(",", ".", $_POST["y"]);
+$x = str_replace(",", ".", $_POST["x"]);
+$r = str_replace(",", ".", $_POST["r"]);
+
+$invalid = array();
 
 if (!is_numeric($y) || !is_numeric($x) || !is_numeric($r)) {
-    echo "{result: 'ZHOPA'}"; // FIXME which fields is invalid ?
+    if (!is_numeric($y)) {
+        array_push($invalid, "y");
+    }
+    if (!is_numeric($x)) {
+        array_push($invalid, "x");
+    }
+    if(!is_numeric($r)) {
+        array_push($invalid, "r");
+    }
+
+    // echo json_encode(array("result" => "invalid", "values" => $invalid)); FIXME
     exit;
 }
 
@@ -15,7 +34,6 @@ $y = floatval($y);
 $x = floatval($x);
 $r = floatval($r);
 
-$invalid = array();
 
 if ($x <= -3 || $x >= 3) {
     array_push($invalid, "x");
@@ -31,7 +49,7 @@ if ($y % 1 != 0 || $y < -3 || $y > 5) {
 
 if (count($invalid) != 0) {
     $response = array("result" => "invalid", "values" => $invalid);
-    echo json_encode($response);
+    // echo json_encode($response); FIXME
     exit;
 }
 
@@ -64,4 +82,17 @@ $response = array("result" => "valid",
                   "cur_time" => date('H:i:s', time()),
                   "exec_time" => $exec_time);
 
-echo json_encode($response);
+array_push($_SESSION["history"], $response);
+
+$json = array_map(function ($resp) {
+    $result = $resp["result"];
+    $x = $resp["x"];
+    $y = $resp["y"];
+    $r = $resp["r"];
+    $is_in = $resp["is_in"];
+    $cur_time = $resp["cur_time"];
+    $exec_time = $resp["exec_time"];
+    return "{\"result\":\"$result\", \"x\":\"$x\", \"y\":\"$y\", \"r\":\"$r\", \"is_in\":\"$is_in\", \"cur_time\":\"$cur_time\", \"exec_time\":\"$exec_time\"}";
+}, $_SESSION["history"]);
+
+echo "[" . join(",", $json) . "]";

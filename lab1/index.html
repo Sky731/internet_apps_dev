@@ -145,6 +145,10 @@
             width: max-content;
         }
 
+        input::placeholder {
+            color: green;
+        }
+
         @media screen and (max-width: 1280px) {
             .container.horizontal {
                 flex-direction: column-reverse;
@@ -175,6 +179,8 @@
             #header {
                 font-size: 12px;
             }
+
+            .res_elem {}
         }
 
 
@@ -287,11 +293,12 @@
         var fd = new FormData(e.currentTarget);
         var y = parseInt(fd.get("y"));
         var x = fd.get("x");
+        x = x.replace(",", ".");
         var r = fd.get("r");
+        r = r.replace(",", ".");
         var endOfLight = false;
         $("label").removeClass("invalid");
         if (!(y <= 5 && y >= -3)) {
-            // $("label[for='y']").addClass("invalid");
             $("#inputs table button").addClass("invalid");
             endOfLight = true;
         }
@@ -303,19 +310,18 @@
                 throw true;
             }
         } catch (e) {
-            // $("label[for='x']").addClass("invalid");
             $("#x").addClass("invalid");
             endOfLight = true;
         }
 
         try {
+            // using != instead of !== cause they have different types
             if (r != parseFloat(r)) throw true;
             r = parseFloat(r);
             if (r >= 5 || r <= 2) {
                 throw true;
             }
         } catch (e) {
-            // $("label[for='r']").addClass("invalid");
             $("#r").addClass("invalid");
             endOfLight = true;
         }
@@ -330,18 +336,22 @@
             contentType: false
         }).then(function (t, u, v) {
             var response = JSON.parse(t);
-            var html = "<tr><td>" + counter +
-                "</td><td>" + response["y"] +
-                "</td><td>" + response["x"] +
-                "</td><td>" + response["r"] +
-                "</td><td>" + response["is_in"] +
-                "</td><td>" + response["cur_time"] +
-                "</td><td>" + parseFloat(response["exec_time"]).toFixed(9) +
-                "</td></tr>";
-            document.getElementById("results").innerHTML += html;
-            $("#results_field").removeClass("hidden");
-            counter++;
-        })
+            $(".res_elem").remove();
+            counter = 1;
+            response.forEach(function (it, i, response) {
+                var html = "<tr class='res_elem'><td>" + counter +
+                    "</td><td>" + it["y"] +
+                    "</td><td>" + it["x"] +
+                    "</td><td>" + it["r"] +
+                    "</td><td>" + it["is_in"] +
+                    "</td><td>" + it["cur_time"] +
+                    "</td><td>" + parseFloat(it["exec_time"]).toFixed(9) +
+                    "</td></tr>";
+                document.getElementById("results").innerHTML += html;
+                $("#results_field").removeClass("hidden");
+                counter++;
+            });
+        });
     });
     
     $("input[type = text]").on("click", function (event) {
