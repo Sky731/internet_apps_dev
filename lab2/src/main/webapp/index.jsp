@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -130,7 +130,7 @@
 
         .invalid {
             box-shadow: 0 0 7px 0 red;
-            background: rgba(255,0,0,0.38);
+            background: rgba(255, 0, 0, 0.38);
             border-color: red;
         }
 
@@ -182,7 +182,8 @@
                 font-size: 12px;
             }
 
-            .res_elem {}
+            .res_elem {
+            }
         }
 
 
@@ -266,13 +267,13 @@
             </div>
         </div>
         <div id="task" class="field">
-            <img src="images/graph.jpg" alt="This is a graph">
-            <img id="task_img" src="images/task.png" alt="This is a task">
+            <img src="static/images/graph.jpg" alt="This is a graph">
+            <img id="task_img" src="static/images/task.png" alt="This is a task">
         </div>
     </div>
 </div>
 
-<script src="js/jQuery.min.js"></script>
+<script src="static/js/jQuery.min.js"></script>
 <script>
     var counter = 1;
     var y = null;
@@ -331,7 +332,7 @@
         if (endOfLight) return;
 
         $.ajax({
-            url: "validator.php",
+            url: "/AreaCheckServlet/",
             data: fd,
             processData: false,
             type: "POST",

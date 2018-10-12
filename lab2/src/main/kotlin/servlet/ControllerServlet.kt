@@ -1,5 +1,8 @@
 package servlet
 
+import com.sun.xml.internal.fastinfoset.util.StringArray
+import java.io.File
+import java.nio.file.Files
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -8,11 +11,17 @@ import javax.servlet.http.HttpServletResponse
 @WebServlet("/")
 class ControllerServlet : HttpServlet() {
   override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
-    // here will be sending statics to user
-    if (req.requestURI != null && (req.requestURI.endsWith(".png") || req.requestURI.endsWith(".css"))) {
+    val staticTypes = arrayOf("png", "css", "jpg", "ico", "js")
+    if (req.requestURI.split(".").last() in staticTypes) {
       // send statics here
-      resp.writer.write("Send static here with URI: ")
-      resp.writer.write(req.requestURI)
+      resp.setHeader("Content-Type", servletContext.getMimeType(req.requestURI))
+      try {
+        servletContext.getResourceAsStream(req.requestURI).copyTo(resp.outputStream)
+      }
+      catch (e: Exception) {
+        e.printStackTrace()
+        resp.sendError(404)
+      }
     } else {
       resp.contentType = "text/html;charset=UTF-8"
       req.getRequestDispatcher("index.jsp").forward(req, resp)
@@ -20,9 +29,8 @@ class ControllerServlet : HttpServlet() {
   }
 
   override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-    // here will be checking input and then calling the AreaCheckServlet
     if (req.requestURI == "/AreaCheckServlet/") {
-      req.servletContext.getNamedDispatcher("servlet.AreaCheckServlet").forward(req, resp)
+      req.servletContext.getNamedDispatcher("AreaCheckServlet").forward(req, resp)
     } else { resp.sendError(404) }
   }
 }
