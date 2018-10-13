@@ -1,8 +1,5 @@
 package servlet
 
-import com.sun.xml.internal.fastinfoset.util.StringArray
-import java.io.File
-import java.nio.file.Files
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -29,7 +26,7 @@ class ControllerServlet : HttpServlet() {
   }
 
   override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-    if (req.requestURI == "/AreaCheckServlet/") {
+    if (req.requestURI == "/AreaCheckServlet/") { // FIXME trailing slash
       req.servletContext.getNamedDispatcher("AreaCheckServlet").forward(req, resp)
     } else { resp.sendError(404) }
   }
