@@ -331,30 +331,43 @@
 
         if (endOfLight) return;
 
-        $.ajax({
-            url: "/AreaCheckServlet/",
-            data: fd,
-            processData: false,
-            type: "POST",
-            contentType: false
-        }).then(function (t, u, v) {
-            var response = JSON.parse(t);
-            $(".res_elem").remove();
-            counter = 1;
-            response.forEach(function (it, i, response) {
-                var html = "<tr class='res_elem'><td>" + counter +
-                    "</td><td>" + it["y"] +
-                    "</td><td>" + it["x"] +
-                    "</td><td>" + it["r"] +
-                    "</td><td>" + it["is_in"] +
-                    "</td><td>" + it["cur_time"] +
-                    "</td><td>" + parseFloat(it["exec_time"]).toFixed(9) +
-                    "</td></tr>";
-                document.getElementById("results").innerHTML += html;
-                $("#results_field").removeClass("hidden");
-                counter++;
-            });
-        });
+        // $.ajax({
+        //     url: "/AreaCheckServlet/",
+        //     data: fd,
+        //     processData: false,
+        //     type: "POST",
+        //     contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+        // }).then(function (t, u, v) {
+        //     var response = JSON.parse(t);
+        //     $(".res_elem").remove();
+        //     counter = 1;
+        //     response.forEach(function (it, i, response) {
+        //         var html = "<tr class='res_elem'><td>" + counter +
+        //             "</td><td>" + it["y"] +
+        //             "</td><td>" + it["x"] +
+        //             "</td><td>" + it["r"] +
+        //             "</td><td>" + it["is_in"] +
+        //             "</td><td>" + it["cur_time"] +
+        //             "</td><td>" + parseFloat(it["exec_time"]).toFixed(9) +
+        //             "</td></tr>";
+        //         document.getElementById("results").innerHTML += html;
+        //         $("#results_field").removeClass("hidden");
+        //         counter++;
+        //     });
+        // });
+
+        const params = new URLSearchParams();
+        for(const pair of fd.entries()) {
+            params.append(pair[0], pair[1]);
+        }
+        fetch('AreaCheckServlet/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            },
+            body: params.toString()
+        }).then(response => response.text());
+
     });
 
     $("input[type = text]").on("click", function (event) {
