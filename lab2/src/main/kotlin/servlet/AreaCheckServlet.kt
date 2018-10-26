@@ -1,5 +1,6 @@
 package servlet
 
+import com.google.gson.Gson
 import java.lang.NumberFormatException
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
@@ -15,11 +16,10 @@ class AreaCheckServlet : HttpServlet() {
       val y = req.getParameter("y").toDouble()
       val r = req.getParameter("r").toDouble()
       if (r <= 0) throw NumberFormatException("Radius can't be less than 0")
-      if (checkHit(x, y, r)) {
-        resp.writer.write("Yeah, you got it")
-      } else {
-        resp.writer.write("You've missed :(")
-      }
+
+      resp.contentType = "application/json"
+      val isIn = checkHit(x, y, r)
+      resp.writer.write(Gson().toJson(Response(isIn, x, y, r)))
     } catch (e: Exception) {
       e.printStackTrace()
       resp.sendError(400, e.message)
@@ -34,3 +34,5 @@ class AreaCheckServlet : HttpServlet() {
     return false
   }
 }
+
+data class Response(val isIn: Boolean, val x: Double, val y: Double, val radius: Double)
