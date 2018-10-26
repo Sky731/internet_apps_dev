@@ -1,8 +1,7 @@
 .idea/
-lab2/.gradle/
-lab2/build/
-lab2/out/
-lab2/gradle/
-lab2/gradlew
-lab2/gradlew.bat
+build/
+out/
+.gradle/
+gradle/
+gradlew*
 
