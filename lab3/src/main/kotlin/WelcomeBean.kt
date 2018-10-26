@@ -1,11 +1,9 @@
-import javax.faces.bean.ManagedBean
+import java.io.Serializable
 
-class WelcomeBean {
+class WelcomeBean : Serializable {
   init {
     println("WelcomeBean instantiated")
   }
 
-  fun getMessage(): String {
-    return "I'm alive!"
-  }
+  fun getMessage() = "I'm alive!"
 }
