@@ -25,4 +25,11 @@
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <description>Bean for checking area hit</description>
+        <managed-bean-name>areaCheckBean</managed-bean-name>
+        <managed-bean-class>AreaCheckBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
 </faces-config>
