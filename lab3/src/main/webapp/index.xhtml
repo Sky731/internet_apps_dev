@@ -11,9 +11,14 @@
 </h:head>
 
 <h:body>
+
+    <ui:insert name="header">
+        <ui:include src="header.xhtml"/>
+    </ui:insert>
+
     <h3>
         <h:form id="clockForm">
-            <h:inputHidden id="timezone" value="#{clockBean.zoneName}" />
+            <h:inputHidden id="timezone" value="#{clockBean.zoneName}"/>
             <p:poll interval="9" update="clock"/>
             <h:outputText id="clock" value="#{clockBean.time}"/>
         </h:form>
