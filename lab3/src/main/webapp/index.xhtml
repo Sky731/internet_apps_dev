@@ -12,7 +12,8 @@
 
 <h:body>
     <h3>
-        <h:form>
+        <h:form id="clockForm">
+            <h:inputHidden id="timezone" value="#{clockBean.zoneName}" />
             <p:poll interval="9" update="clock"/>
             <h:outputText id="clock" value="#{clockBean.time}"/>
         </h:form>
@@ -22,6 +23,14 @@
         <h:commandLink action="#{navigationController.moveToEssential}"
                        value="Main page"/>
     </h:form>
+
+    <script type="text/javascript">
+        function getTimeZone() {
+            return Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+
+        document.getElementById("clockForm:timezone").value = getTimeZone();
+    </script>
 </h:body>
 
 </html>
