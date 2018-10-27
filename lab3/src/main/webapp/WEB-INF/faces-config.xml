@@ -18,4 +18,11 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <description>Clock bean</description>
+        <managed-bean-name>clockBean</managed-bean-name>
+        <managed-bean-class>ClockBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
 </faces-config>
