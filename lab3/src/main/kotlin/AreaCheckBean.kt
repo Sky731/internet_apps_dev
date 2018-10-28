@@ -13,10 +13,7 @@ class AreaCheckBean : Serializable {
 
   fun getResultsArray() = history.toTypedArray()
 
-  private fun validate(): Boolean {
-    // TODO add implementation for validating parameters
-    return true
-  }
+  private fun validate() = r in (1..4) && x in (-4..4) && y in (-3..5)
 
   private fun checkHit(): Boolean {
     // TODO add implementation for checking area hit
